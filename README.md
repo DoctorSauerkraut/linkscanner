@@ -1,6 +1,6 @@
 # linkscanner
 
-Analyze a set of files through URLS by checking
+Forensic script to analyze a set of files through URLS by checking
 - Type
 - Magic number
 - VirusTotal score
