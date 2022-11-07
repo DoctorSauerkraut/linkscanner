@@ -12,11 +12,18 @@ import virustotal_python
 import os 
 import mimetypes
 import sys
+import datetime
 
 from colorama import Fore, Back, Style
 
 if __name__ == "__main__" :
     openfile = sys.argv[1].strip()
+    
+    x = datetime.datetime.now()
+    report_file = "analysis_"+str(x.year)+"_"+str(x.month)+"_"+str(x.day)+".txt"
+    output_file = open(report_file, "w")
+
+    print("Output file:\t"+report_file)
 
     link_file = open(openfile, "r")
 
@@ -24,7 +31,16 @@ if __name__ == "__main__" :
     vt_score = 0
     i = 0
 
+    ln = 0
+    progress = 0
+    with open(openfile, 'r') as fp:
+        for l in fp:
+            ln = ln + 1
+    print("Total URLs:\t"+str(ln))
+
     for line in link_file:
+        progress = int((i / ln)*10000)  
+        sys.stdout.write("\rProgress:\t"+str(progress/100)+" %")
         type_check = False
         http_code = 0
         file_data = ""
@@ -70,6 +86,10 @@ if __name__ == "__main__" :
             # Magic number check
             magic_number = file_data[0:8].hex()
             
+            if not os.path.exists("output/"):
+                # if the demo_folder directory is not present 
+                # then create it.
+                os.makedirs("output/")
             f = open("output/"+file_name, "wb")
             f.write(file_data)
             i = i + 1
@@ -114,4 +134,4 @@ if __name__ == "__main__" :
         results = results + ("-"*72) + " \n"
 
     # Print report
-    print(results)
+    output_file.write(results)
